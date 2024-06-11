@@ -66,7 +66,7 @@
           <p><strong>Тиск: </strong>{{ weatherData.data.pressure || 0 }} hPa</p>
         </div>
         <div class="chart-container">
-          <canvas id="hourlyChart"></canvas>
+          <canvas :id="canvasId"></canvas>
         </div>
       </div>
       <div v-if="currentView === 'week'" class="card-content-week">
@@ -91,6 +91,14 @@
       </div>
     </div>
   </div>
+  <ModalWindow
+    v-if="isModalVisible"
+    :title="'Увага!'"
+    :isVisible="isModalVisible"
+    @cancel="cancelModal"
+  >
+    Нажаль у обранних може бути до 5 міст.
+  </ModalWindow>
 </template>
 
 <script setup>
@@ -105,6 +113,7 @@ import {
 } from "vue";
 import Chart from "chart.js/auto";
 import { useStore } from "../store";
+import ModalWindow from "./ModalWindow.vue";
 
 const props = defineProps({
   weatherData: {
@@ -116,6 +125,13 @@ const props = defineProps({
 const store = useStore();
 const currentView = ref("day");
 let chartInstance = null;
+const canvasId = `hourlyChart-${Math.random().toString(36).substr(2, 9)}`;
+
+const isModalVisible = ref(false);
+
+const cancelModal = () => {
+  isModalVisible.value = false;
+};
 
 const setView = (view) => {
   currentView.value = view;
@@ -128,21 +144,23 @@ const isFavorite = computed(() => {
 });
 
 const toggleFavorite = (card) => {
-  if (store.favoriteSearches.length < 5) {
-    const index = store.favoriteSearches.findIndex(
-      (item) => item.name === card.name
-    );
-    if (index !== -1) {
-      store.favoriteSearches.splice(index, 1);
-    } else {
+  const index = store.favoriteSearches.findIndex(
+    (item) => item.name === card.name
+  );
+  if (index !== -1) {
+    store.favoriteSearches.splice(index, 1);
+  } else {
+    if (store.favoriteSearches.length < 5) {
       store.favoriteSearches.push(card);
+    } else {
+      isModalVisible.value = true;
     }
   }
 };
 
 const createChart = () => {
   nextTick(() => {
-    const ctx = document.getElementById("hourlyChart");
+    const ctx = document.getElementById(canvasId);
     if (ctx) {
       if (chartInstance) {
         chartInstance.destroy();

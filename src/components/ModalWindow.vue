@@ -8,15 +8,23 @@
         <slot></slot>
       </div>
       <div class="modal-footer">
-        <button class="modal-button" @click="confirm">Yes</button>
-        <button class="modal-button" @click="cancel">No</button>
+        <button class="modal-button" @click="cancel">
+          {{ cancelButtonText }}
+        </button>
+        <button
+          v-if="props.showConfirmButton"
+          class="modal-button"
+          @click="confirm"
+        >
+          Yes
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits, computed } from "vue";
 
 const props = defineProps({
   title: {
@@ -24,6 +32,10 @@ const props = defineProps({
     default: "Confirm",
   },
   isVisible: {
+    type: Boolean,
+    default: false,
+  },
+  showConfirmButton: {
     type: Boolean,
     default: false,
   },
@@ -38,6 +50,10 @@ const confirm = () => {
 const cancel = () => {
   emit("cancel");
 };
+
+const cancelButtonText = computed(() => {
+  return props.showConfirmButton ? "No" : "Okay";
+});
 </script>
 
 <style scoped>
@@ -69,7 +85,8 @@ const cancel = () => {
 
 .modal-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  margin-top: 20px;
   gap: 10px;
 }
 

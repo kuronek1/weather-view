@@ -6,7 +6,7 @@ const routes = [
     path: "/",
     name: "WeatherBoard",
     component: WeatherComponent,
-  }
+  },
 ];
 
 const router = createRouter({

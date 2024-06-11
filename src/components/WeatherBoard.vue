@@ -1,10 +1,7 @@
-<script>
-</script>
+<script></script>
 
 <template>
-  <div class="wrapper">
-    City
-  </div>
+  <div class="wrapper">City</div>
 </template>
 
 <style>

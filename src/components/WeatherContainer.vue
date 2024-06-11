@@ -28,6 +28,7 @@
       v-if="isModalVisible"
       :title="'Підтвердження видалення'"
       :isVisible="isModalVisible"
+      showConfirmButton
       @confirm="removeCard"
       @cancel="cancelRemove"
     >
