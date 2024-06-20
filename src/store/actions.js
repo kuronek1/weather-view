@@ -26,12 +26,14 @@ export default {
 
   async fetchWeatherData(lat, lon) {
     try {
+      const apiKey = process.env.VUE_APP_OPEN_WEATHER_API_KEY;
+
       const currentWeatherPromise = axios.get(
-        `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=daily&appid=7eceb2cd107bad214cbae47f398242a3&units=metric`
+        `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=daily&appid=${apiKey}&units=metric`
       );
 
       const forecastPromise = axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=7eceb2cd107bad214cbae47f398242a3&units=metric`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
       );
 
       const [currentWeatherResponse, forecastResponse] = await Promise.all([
